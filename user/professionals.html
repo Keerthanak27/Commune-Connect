@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Professionals - Apartment Hub{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2 style="color: var(--primary); margin-bottom: 2rem;">
+        <i class="fas fa-users"></i> Community Professionals
+    </h2>
+
+    <!-- Search -->
+    <div class="search-container" style="margin-bottom: 2rem;">
+        <form method="GET" action="{{ url_for('professionals') }}">
+            <input type="text" name="search" class="search-input" placeholder="Search professionals by role..." value="{{ search }}">
+            <button type="submit" class="search-btn">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
+    </div>
+
+    {% if search %}
+    <div style="background: #e7f3ff; padding: 1rem; border-radius: var(--radius); margin-bottom: 2rem;">
+        <p style="margin-bottom: 0;">
+            <i class="fas fa-filter"></i> Showing results for "{{ search }}"
+            <a href="{{ url_for('professionals') }}" style="margin-left: 1rem; color: var(--primary);">Clear search</a>
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Professionals Grid -->
+    <div class="grid grid-3">
+        {% for profession in professions %}
+        <div class="card" style="padding: 1.5rem; text-align: center;">
+            <div style="margin-bottom: 1rem;">
+                {% if profession.profile_photo %}
+                    <img src="{{ url_for('static', filename='uploads/' + profession.profile_photo) }}" 
+                         class="profile-img" alt="{{ profession.username }}" style="width: 100px; height: 100px;">
+                {% else %}
+                    <div style="width: 100px; height: 100px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin: 0 auto;">
+                        <i class="fas fa-user" style="font-size: 2rem;"></i>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <h3 style="color: var(--primary); margin-bottom: 0.5rem;">{{ profession.role }}</h3>
+            <p style="color: var(--gray); margin-bottom: 1rem;">by {{ profession.username }}</p>
+            
+            {% if profession.description %}
+            <p style="font-size: 0.9rem; color: var(--gray); margin-bottom: 1rem; text-align: left;">
+                {{ profession.description }}
+            </p>
+            {% endif %}
+            
+            <div style="background: #f8f9fa; padding: 1rem; border-radius: var(--radius); margin-bottom: 1rem; text-align: left;">
+                <div style="display: flex; justify-content: between; margin-bottom: 0.5rem;">
+                    <span><i class="fas fa-user"></i> Name:</span>
+                    <strong>{{ profession.username }}</strong>
+                </div>
+                <div style="display: flex; justify-content: between; margin-bottom: 0.5rem;">
+                    <span><i class="fas fa-phone"></i> Contact:</span>
+                    <strong>{{ profession.contact_number }}</strong>
+                </div>
+                <div style="display: flex; justify-content: between; margin-bottom: 0.5rem;">
+                    <span><i class="fas fa-envelope"></i> Email:</span>
+                    <strong>{{ profession.email }}</strong>
+                </div>
+                <div style="display: flex; justify-content: between;">
+                    <span><i class="fas fa-home"></i> House No:</span>
+                    <strong>{{ profession.house_no }}</strong>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 0.5rem;">
+                <a href="tel:{{ profession.contact_number }}" class="btn btn-primary btn-sm" style="flex: 1;">
+                    <i class="fas fa-phone"></i> Call
+                </a>
+                <a href="mailto:{{ profession.email }}" class="btn btn-success btn-sm" style="flex: 1;">
+                    <i class="fas fa-envelope"></i> Email
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    {% if not professions %}
+    <div style="text-align: center; padding: 3rem; color: var(--gray);">
+        <i class="fas fa-users" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+        <h3>No professionals found</h3>
+        <p>{% if search %}Try a different search term{% else %}No professionals have registered their services yet{% endif %}</p>
+        {% if not search %}
+        <a href="{{ url_for('add_profession') }}" class="btn btn-primary mt-2">
+            <i class="fas fa-plus"></i> Be the first to add your profession
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

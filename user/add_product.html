@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Add Product - Apartment Hub{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <h2 style="color: var(--primary); margin-bottom: 2rem;">
+        <i class="fas fa-cart-plus"></i> Add Product to Marketplace
+    </h2>
+
+    <form method="POST" action="{{ url_for('add_product') }}" enctype="multipart/form-data">
+        <div class="form-group">
+            <label class="form-label" for="name">Product Name</label>
+            <input type="text" class="form-control" id="name" name="name" required 
+                   placeholder="Enter product name">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="category">Category</label>
+            <select class="form-control" id="category" name="category" required>
+                <option value="">Select category</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Furniture">Furniture</option>
+                <option value="Clothing">Clothing</option>
+                <option value="Books">Books</option>
+                <option value="Sports">Sports Equipment</option>
+                <option value="Home Appliances">Home Appliances</option>
+                <option value="Kitware">Kitchenware</option>
+                <option value="Toys">Toys & Games</option>
+                <option value="Beauty">Beauty & Personal Care</option>
+                <option value="Automotive">Automotive</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="price">Price (₹)</label>
+            <input type="number" class="form-control" id="price" name="price" required 
+                   min="0" step="0.01" placeholder="Enter price">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="quantity">Quantity</label>
+            <input type="number" class="form-control" id="quantity" name="quantity" required 
+                   min="1" placeholder="Enter quantity">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="description">Description</label>
+            <textarea class="form-control" id="description" name="description" 
+                      rows="4" placeholder="Describe your product..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="product_image">Product Image</label>
+            <input type="file" class="form-control" id="product_image" name="product_image" 
+                   accept="image/*" onchange="previewImage(this, 'productPreview')">
+            <div class="text-center mt-2">
+                <img id="productPreview" src="#" alt="Product Preview" 
+                     style="max-width: 200px; max-height: 200px; display: none; border-radius: var(--radius);">
+            </div>
+        </div>
+
+        <div style="background: #e7f3ff; padding: 1rem; border-radius: var(--radius); margin-bottom: 1.5rem;">
+            <h4 style="color: var(--info); margin-bottom: 0.5rem;">
+                <i class="fas fa-info-circle"></i> Note
+            </h4>
+            <p style="margin-bottom: 0; font-size: 0.9rem;">
+                Your product will be reviewed by the admin before it appears in the marketplace. 
+                Your contact information and house number will be automatically shared from your profile.
+            </p>
+        </div>
+
+        <button type="submit" class="btn btn-success" style="width: 100%;">
+            <i class="fas fa-plus-circle"></i> Add Product
+        </button>
+        
+        <a href="{{ url_for('user_dashboard') }}" class="btn btn-secondary" style="width: 100%; margin-top: 1rem;">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </form>
+</div>
+
+<script>
+    function previewImage(input, previewId) {
+        const preview = document.getElementById(previewId);
+        const file = input.files[0];
+        const reader = new FileReader();
+        
+        reader.onloadend = function() {
+            preview.src = reader.result;
+            preview.style.display = 'block';
+        }
+        
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = '';
+            preview.style.display = 'none';
+        }
+    }
+
+    // Price formatting
+    document.getElementById('price').addEventListener('blur', function() {
+        this.value = parseFloat(this.value).toFixed(2);
+    });
+</script>
+{% endblock %}

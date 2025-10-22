@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block title %}User Dashboard - Apartment Hub{% endblock %}
+
+{% block content %}
+<div class="text-center mb-4">
+    <h1 style="color: var(--white); margin-bottom: 0.5rem;">Welcome, {{ session.username }}!</h1>
+    <p style="color: rgba(255, 255, 255, 0.9);">Your apartment community dashboard</p>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-number">{{ professions|length }}</div>
+        <div class="stat-label">My Professions</div>
+        <i class="fas fa-briefcase" style="font-size: 2rem; margin-top: 1rem;"></i>
+    </div>
+    
+    <div class="stat-card" style="background: linear-gradient(135deg, var(--success), #2a9d8f);">
+        <div class="stat-number">{{ products|length }}</div>
+        <div class="stat-label">My Products</div>
+        <i class="fas fa-shopping-cart" style="font-size: 2rem; margin-top: 1rem;"></i>
+    </div>
+    
+    <div class="stat-card" style="background: linear-gradient(135deg, var(--info), #219ebc);">
+        <div class="stat-number">{{ purchases|length }}</div>
+        <div class="stat-label">Pending Sales</div>
+        <i class="fas fa-handshake" style="font-size: 2rem; margin-top: 1rem;"></i>
+    </div>
+    
+    <div class="stat-card" style="background: linear-gradient(135deg, var(--warning), #e76f51);">
+        <div class="stat-number">0</div>
+        <div class="stat-label">My Events</div>
+        <i class="fas fa-calendar" style="font-size: 2rem; margin-top: 1rem;"></i>
+    </div>
+</div>
+
+<div class="grid grid-2">
+    <div class="card">
+        <h3 style="margin-bottom: 1rem; color: var(--primary);">
+            <i class="fas fa-rocket"></i> Quick Actions
+        </h3>
+        <div style="display: grid; gap: 1rem;">
+            <a href="{{ url_for('add_profession') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add Profession
+            </a>
+            <a href="{{ url_for('add_product') }}" class="btn btn-success">
+                <i class="fas fa-cart-plus"></i> Add Product
+            </a>
+            <a href="{{ url_for('marketplace') }}" class="btn btn-info">
+                <i class="fas fa-shopping-bag"></i> Browse Marketplace
+            </a>
+            <a href="{{ url_for('professionals') }}" class="btn btn-warning">
+                <i class="fas fa-users"></i> Find Professionals
+            </a>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-bottom: 1rem; color: var(--primary);">
+            <i class="fas fa-bell"></i> Pending Actions
+        </h3>
+        {% if purchases %}
+            <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 1rem; border-radius: var(--radius);">
+                <p style="margin-bottom: 0.5rem;"><strong>You have {{ purchases|length }} pending sale(s) to verify</strong></p>
+                <a href="#purchases" class="btn btn-warning btn-sm">Review Now</a>
+            </div>
+        {% else %}
+            <p style="color: var(--gray); text-align: center; padding: 2rem;">No pending actions</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="grid grid-2">
+    <!-- My Professions -->
+    <div class="card">
+        <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 1rem;">
+            <h3 style="color: var(--primary);">
+                <i class="fas fa-briefcase"></i> My Professions
+            </h3>
+            <a href="{{ url_for('add_profession') }}" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i> Add
+            </a>
+        </div>
+        
+        {% if professions %}
+            <div class="grid grid-2">
+                {% for profession in professions %}
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: var(--radius);">
+                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;">{{ profession.role }}</h4>
+                    <p style="font-size: 0.9rem; color: var(--gray); margin-bottom: 0.5rem;">
+                        {{ profession.description or 'No description' }}
+                    </p>
+                    <div style="font-size: 0.8rem; color: {% if profession.approved %}var(--success){% else %}var(--warning){% endif %};">
+                        <i class="fas fa-{% if profession.approved %}check-circle{% else %}clock{% endif %}"></i>
+                        {% if profession.approved %}Approved{% else %}Pending Approval{% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p style="color: var(--gray); text-align: center; padding: 2rem;">
+                <i class="fas fa-briefcase" style="font-size: 2rem; margin-bottom: 1rem;"></i><br>
+                No professions added yet
+            </p>
+        {% endif %}
+    </div>
+
+    <!-- My Products -->
+    <div class="card">
+        <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 1rem;">
+            <h3 style="color: var(--primary);">
+                <i class="fas fa-shopping-cart"></i> My Products
+            </h3>
+            <a href="{{ url_for('add_product') }}" class="btn btn-success btn-sm">
+                <i class="fas fa-plus"></i> Add
+            </a>
+        </div>
+        
+        {% if products %}
+            <div class="grid grid-2">
+                {% for product in products %}
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: var(--radius);">
+                    {% if product.image %}
+                    <img src="{{ url_for('static', filename='uploads/' + product.image) }}" 
+                         style="width: 100%; height: 100px; object-fit: cover; border-radius: var(--radius); margin-bottom: 0.5rem;">
+                    {% endif %}
+                    <h4 style="color: var(--primary); margin-bottom: 0.5rem; font-size: 1rem;">{{ product.name }}</h4>
+                    <p style="font-size: 0.9rem; color: var(--gray); margin-bottom: 0.5rem;">
+                        ₹{{ product.price }} • Qty: {{ product.quantity }}
+                    </p>
+                    <div style="font-size: 0.8rem; color: {% if product.approved %}var(--success){% else %}var(--warning){% endif %};">
+                        <i class="fas fa-{% if product.approved %}check-circle{% else %}clock{% endif %}"></i>
+                        {% if product.approved %}Approved{% else %}Pending Approval{% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p style="color: var(--gray); text-align: center; padding: 2rem;">
+                <i class="fas fa-shopping-cart" style="font-size: 2rem; margin-bottom: 1rem;"></i><br>
+                No products added yet
+            </p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Pending Purchases -->
+{% if purchases %}
+<div class="card" id="purchases">
+    <h3 style="margin-bottom: 1rem; color: var(--primary);">
+        <i class="fas fa-handshake"></i> Pending Sales Verification
+    </h3>
+    
+    <div class="grid grid-2">
+        {% for purchase in purchases %}
+        <div style="background: #fff3cd; padding: 1.5rem; border-radius: var(--radius); border-left: 4px solid var(--warning);">
+            <h4 style="margin-bottom: 0.5rem;">{{ purchase.product_name }}</h4>
+            <p style="margin-bottom: 0.5rem;"><strong>Buyer:</strong> {{ purchase.buyer_name }}</p>
+            <p style="margin-bottom: 0.5rem;"><strong>Quantity:</strong> {{ purchase.quantity }}</p>
+            
+            <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                <a href="{{ url_for('verify_purchase', purchase_id=purchase.id) }}" 
+                   class="btn btn-success btn-sm" 
+                   onclick="return confirm('Verify this purchase and reduce inventory?')">
+                    <i class="fas fa-check"></i> Verify
+                </a>
+                <a href="{{ url_for('reject_purchase', purchase_id=purchase.id) }}" 
+                   class="btn btn-danger btn-sm"
+                   onclick="return confirm('Reject this purchase request?')">
+                    <i class="fas fa-times"></i> Reject
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

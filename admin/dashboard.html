@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Apartment Hub{% endblock %}
+
+{% block content %}
+<div class="text-center mb-4">
+    <h1 style="color: var(--white); margin-bottom: 0.5rem;">Admin Dashboard</h1>
+    <p style="color: rgba(255, 255, 255, 0.9);">Manage your apartment community</p>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-number">{{ total_users }}</div>
+        <div class="stat-label">Total Users</div>
+        <i class="fas fa-users" style="font-size: 2rem; margin-top: 1rem;"></i>
+    </div>
+    
+    <div class="stat-card" style="background: linear-gradient(135deg, var(--success), #2a9d8f);">
+        <div class="stat-number">{{ pending_users }}</div>
+        <div class="stat-label">Pending Users</div>
+        <i class="fas fa-user-clock" style="font-size: 2rem; margin-top: 1rem;"></i>
+    </div>
+    
+    <div class="stat-card" style="background: linear-gradient(135deg, var(--info), #219ebc);">
+        <div class="stat-number">{{ total_professions }}</div>
+        <div class="stat-label">Approved Professions</div>
+        <i class="fas fa-briefcase" style="font-size: 2rem; margin-top: 1rem;"></i>
+    </div>
+    
+    <div class="stat-card" style="background: linear-gradient(135deg, var(--warning), #e76f51);">
+        <div class="stat-number">{{ pending_professions }}</div>
+        <div class="stat-label">Pending Professions</div>
+        <i class="fas fa-tasks" style="font-size: 2rem; margin-top: 1rem;"></i>
+    </div>
+</div>
+
+<div class="grid grid-2">
+    <div class="card">
+        <h3 style="margin-bottom: 1rem; color: var(--primary);">
+            <i class="fas fa-exclamation-circle"></i> Quick Actions
+        </h3>
+        <div style="display: grid; gap: 1rem;">
+            <a href="{{ url_for('admin_pending_users') }}" class="btn btn-warning">
+                <i class="fas fa-user-check"></i> Review Pending Users ({{ pending_users }})
+            </a>
+            <a href="{{ url_for('admin_pending_professions') }}" class="btn btn-info">
+                <i class="fas fa-briefcase"></i> Review Professions ({{ pending_professions }})
+            </a>
+            <a href="{{ url_for('admin_pending_products') }}" class="btn btn-success">
+                <i class="fas fa-shopping-cart"></i> Review Products ({{ pending_products }})
+            </a>
+            <a href="{{ url_for('admin_events') }}" class="btn btn-primary">
+                <i class="fas fa-calendar-plus"></i> Manage Events
+            </a>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-bottom: 1rem; color: var(--primary);">
+            <i class="fas fa-chart-bar"></i> Statistics
+        </h3>
+        <div style="display: grid; gap: 1rem;">
+            <div style="display: flex; justify-content: between; align-items: center; padding: 1rem; background: #f8f9fa; border-radius: var(--radius);">
+                <span>Total Approved Users</span>
+                <strong style="color: var(--primary);">{{ total_users }}</strong>
+            </div>
+            <div style="display: flex; justify-content: between; align-items: center; padding: 1rem; background: #f8f9fa; border-radius: var(--radius);">
+                <span>Approved Professions</span>
+                <strong style="color: var(--info);">{{ total_professions }}</strong>
+            </div>
+            <div style="display: flex; justify-content: between; align-items: center; padding: 1rem; background: #f8f9fa; border-radius: var(--radius);">
+                <span>Approved Products</span>
+                <strong style="color: var(--success);">{{ total_products }}</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h3 style="margin-bottom: 1rem; color: var(--primary);">
+        <i class="fas fa-rocket"></i> System Overview
+    </h3>
+    <p>Welcome to the Apartment Hub Admin Dashboard. From here you can manage all aspects of your apartment community including user approvals, profession listings, marketplace products, and community events.</p>
+    
+    <div class="grid grid-4 mt-4">
+        <div style="text-align: center; padding: 1rem;">
+            <i class="fas fa-users" style="font-size: 2rem; color: var(--primary); margin-bottom: 0.5rem;"></i>
+            <h4>User Management</h4>
+            <p style="color: var(--gray); font-size: 0.875rem;">Approve, reject, and manage community members</p>
+        </div>
+        
+        <div style="text-align: center; padding: 1rem;">
+            <i class="fas fa-briefcase" style="font-size: 2rem; color: var(--info); margin-bottom: 0.5rem;"></i>
+            <h4>Professions</h4>
+            <p style="color: var(--gray); font-size: 0.875rem;">Manage professional services offered by residents</p>
+        </div>
+        
+        <div style="text-align: center; padding: 1rem;">
+            <i class="fas fa-shopping-cart" style="font-size: 2rem; color: var(--success); margin-bottom: 0.5rem;"></i>
+            <h4>Marketplace</h4>
+            <p style="color: var(--gray); font-size: 0.875rem;">Oversee product listings and transactions</p>
+        </div>
+        
+        <div style="text-align: center; padding: 1rem;">
+            <i class="fas fa-calendar" style="font-size: 2rem; color: var(--warning); margin-bottom: 0.5rem;"></i>
+            <h4>Events</h4>
+            <p style="color: var(--gray); font-size: 0.875rem;">Create and manage community events</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

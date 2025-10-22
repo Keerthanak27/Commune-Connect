@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Pending Professions - Apartment Hub{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 2rem;">
+        <h2 style="color: var(--primary);">
+            <i class="fas fa-briefcase-clock"></i> Pending Profession Approvals
+        </h2>
+        <a href="{{ url_for('admin_professions') }}" class="btn btn-primary">
+            <i class="fas fa-briefcase"></i> Approved Professions
+        </a>
+    </div>
+
+    {% if professions %}
+    <div class="grid grid-2">
+        {% for profession in professions %}
+        <div class="card" style="padding: 1.5rem;">
+            <div style="text-align: center; margin-bottom: 1rem;">
+                {% if profession.profile_photo %}
+                    <img src="{{ url_for('static', filename='uploads/' + profession.profile_photo) }}" 
+                         class="profile-img" alt="Profile">
+                {% else %}
+                    <div style="width: 80px; height: 80px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin: 0 auto;">
+                        <i class="fas fa-user" style="font-size: 2rem;"></i>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <h3 style="text-align: center; color: var(--primary); margin-bottom: 0.5rem;">
+                {{ profession.role }}
+            </h3>
+            
+            <div style="text-align: center; color: var(--gray); margin-bottom: 1rem;">
+                by {{ profession.username }}
+            </div>
+            
+            {% if profession.description %}
+            <p style="margin-bottom: 1rem; font-size: 0.9rem; background: #f8f9fa; padding: 1rem; border-radius: var(--radius);">
+                {{ profession.description }}
+            </p>
+            {% endif %}
+            
+            <div style="background: #f8f9fa; padding: 1rem; border-radius: var(--radius); margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: between; margin-bottom: 0.5rem;">
+                    <span>Contact:</span>
+                    <strong>{{ profession.contact_number }}</strong>
+                </div>
+                <div style="display: flex; justify-content: between; margin-bottom: 0.5rem;">
+                    <span>Email:</span>
+                    <strong>{{ profession.email }}</strong>
+                </div>
+                <div style="display: flex; justify-content: between;">
+                    <span>House No:</span>
+                    <strong>{{ profession.house_no }}</strong>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 0.5rem;">
+                <a href="{{ url_for('approve_profession', profession_id=profession.id) }}" 
+                   class="btn btn-success btn-sm" style="flex: 1;"
+                   onclick="return confirm('Approve this profession?')">
+                    <i class="fas fa-check"></i> Approve
+                </a>
+                <a href="{{ url_for('reject_profession', profession_id=profession.id) }}" 
+                   class="btn btn-danger btn-sm" style="flex: 1;"
+                   onclick="return confirm('Reject and delete this profession?')">
+                    <i class="fas fa-times"></i> Reject
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 3rem; color: var(--gray);">
+        <i class="fas fa-check-circle" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+        <h3>No Pending Professions</h3>
+        <p>All profession requests have been processed</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

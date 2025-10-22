@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}OTP Verification - Apartment Hub{% endblock %}
+
+{% block content %}
+<div style="min-height: 80vh; display: flex; align-items: center; justify-content: center;">
+    <div class="card" style="max-width: 400px; width: 100%;">
+        <div class="text-center mb-4">
+            <h1 style="color: var(--primary); margin-bottom: 0.5rem;">
+                <i class="fas fa-shield-alt"></i>
+            </h1>
+            <h2>OTP Verification</h2>
+            <p style="color: var(--gray);">Enter the OTP sent to your email</p>
+        </div>
+
+        <form method="POST" action="{{ url_for('user_otp') }}">
+            <div class="form-group">
+                <label class="form-label" for="otp">6-digit OTP</label>
+                <input type="text" class="form-control" id="otp" name="otp" required 
+                       maxlength="6" pattern="[0-9]{6}" placeholder="Enter OTP"
+                       style="text-align: center; letter-spacing: 0.5em; font-size: 1.2rem;">
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+                <i class="fas fa-check-circle"></i> Verify OTP
+            </button>
+        </form>
+
+        <div class="text-center mt-3">
+            <p style="color: var(--gray); font-size: 0.875rem;">
+                <i class="fas fa-info-circle"></i> Check your email for the OTP
+            </p>
+            <a href="{{ url_for('user_register') }}" style="color: var(--primary); text-decoration: none;">
+                <i class="fas fa-arrow-left"></i> Back to Registration
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('otp').addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+</script>
+{% endblock %}

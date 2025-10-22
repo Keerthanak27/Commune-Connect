@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile - Apartment Hub{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2 style="color: var(--primary); margin-bottom: 2rem;">
+        <i class="fas fa-user-circle"></i> My Profile
+    </h2>
+
+    <div class="grid grid-2">
+        <div>
+            <form method="POST" action="{{ url_for('update_profile') }}" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label class="form-label" for="username">Full Name</label>
+                    <input type="text" class="form-control" id="username" name="username" 
+                           value="{{ user.username }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="email">Email</label>
+                    <input type="email" class="form-control" id="email" value="{{ user.email }}" disabled
+                           style="background-color: #f8f9fa;">
+                    <small style="color: var(--gray);">Email cannot be changed</small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="contact_number">Contact Number</label>
+                    <input type="tel" class="form-control" id="contact_number" name="contact_number" 
+                           value="{{ user.contact_number }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="house_no">House Number</label>
+                    <input type="text" class="form-control" id="house_no" name="house_no" 
+                           value="{{ user.house_no }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="profile_photo">Profile Photo</label>
+                    <input type="file" class="form-control" id="profile_photo" name="profile_photo" 
+                           accept="image/*" onchange="previewImage(this, 'profilePreview')">
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Update Profile
+                </button>
+            </form>
+        </div>
+
+        <div style="text-align: center; padding: 2rem;">
+            <div id="profilePreviewContainer">
+                {% if user.profile_photo %}
+                    <img src="{{ url_for('static', filename='uploads/' + user.profile_photo) }}" 
+                         id="profilePreview" class="profile-img" style="width: 200px; height: 200px;">
+                {% else %}
+                    <div id="profilePreview" style="width: 200px; height: 200px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin: 0 auto; font-size: 4rem;">
+                        <i class="fas fa-user"></i>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <h3 style="margin-top: 1rem; color: var(--primary);">{{ user.username }}</h3>
+            <p style="color: var(--gray);">{{ user.email }}</p>
+            
+            <div style="background: #f8f9fa; padding: 1rem; border-radius: var(--radius); margin-top: 1rem; text-align: left;">
+                <div style="display: flex; justify-content: between; margin-bottom: 0.5rem;">
+                    <span><i class="fas fa-phone"></i> Contact:</span>
+                    <strong>{{ user.contact_number }}</strong>
+                </div>
+                <div style="display: flex; justify-content: between; margin-bottom: 0.5rem;">
+                    <span><i class="fas fa-home"></i> House No:</span>
+                    <strong>{{ user.house_no }}</strong>
+                </div>
+                <div style="display: flex; justify-content: between;">
+                    <span><i class="fas fa-calendar"></i> Member Since:</span>
+                    <strong>{{ user.created_at[:10] }}</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function previewImage(input, previewId) {
+        const preview = document.getElementById(previewId);
+        const file = input.files[0];
+        const reader = new FileReader();
+        
+        reader.onloadend = function() {
+            if (preview.tagName === 'IMG') {
+                preview.src = reader.result;
+            } else {
+                // Replace div with image
+                const newPreview = document.createElement('img');
+                newPreview.id = previewId;
+                newPreview.src = reader.result;
+                newPreview.className = 'profile-img';
+                newPreview.style.width = '200px';
+                newPreview.style.height = '200px';
+                preview.parentNode.replaceChild(newPreview, preview);
+            }
+        }
+        
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
+{% endblock %}

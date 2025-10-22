@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Professions - Apartment Hub{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 2rem;">
+        <h2 style="color: var(--primary);">
+            <i class="fas fa-briefcase"></i> Manage Professions
+        </h2>
+        <a href="{{ url_for('admin_pending_professions') }}" class="btn btn-warning">
+            <i class="fas fa-clock"></i> Pending Approvals
+        </a>
+    </div>
+
+    <div class="search-container">
+        <form method="GET" action="{{ url_for('admin_professions') }}" style="display: flex; gap: 1rem;">
+            <input type="text" name="search" class="search-input" placeholder="Search professions by role..." value="{{ search }}">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search"></i> Search
+            </button>
+            {% if search %}
+            <a href="{{ url_for('admin_professions') }}" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Clear
+            </a>
+            {% endif %}
+        </form>
+    </div>
+
+    <div class="grid grid-3">
+        {% for profession in professions %}
+        <div class="card" style="padding: 1.5rem;">
+            <div style="text-align: center; margin-bottom: 1rem;">
+                {% if profession.profile_photo %}
+                    <img src="{{ url_for('static', filename='uploads/' + profession.profile_photo) }}" 
+                         class="profile-img" alt="Profile">
+                {% else %}
+                    <div style="width: 80px; height: 80px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin: 0 auto;">
+                        <i class="fas fa-user" style="font-size: 2rem;"></i>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <h3 style="text-align: center; color: var(--primary); margin-bottom: 0.5rem;">
+                {{ profession.role }}
+            </h3>
+            
+            <div style="text-align: center; color: var(--gray); margin-bottom: 1rem;">
+                by {{ profession.username }}
+            </div>
+            
+            {% if profession.description %}
+            <p style="margin-bottom: 1rem; font-size: 0.9rem;">{{ profession.description }}</p>
+            {% endif %}
+            
+            <div style="background: #f8f9fa; padding: 1rem; border-radius: var(--radius); margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: between; margin-bottom: 0.5rem;">
+                    <span>Contact:</span>
+                    <strong>{{ profession.contact_number }}</strong>
+                </div>
+                <div style="display: flex; justify-content: between; margin-bottom: 0.5rem;">
+                    <span>Email:</span>
+                    <strong>{{ profession.email }}</strong>
+                </div>
+                <div style="display: flex; justify-content: between;">
+                    <span>House No:</span>
+                    <strong>{{ profession.house_no }}</strong>
+                </div>
+            </div>
+            
+            <button onclick="deleteProfession({{ profession.id }})" class="btn btn-danger btn-sm" style="width: 100%;">
+                <i class="fas fa-trash"></i> Delete
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    
+    {% if not professions %}
+    <div style="text-align: center; padding: 3rem; color: var(--gray);">
+        <i class="fas fa-briefcase" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+        <h3>No professions found</h3>
+        <p>{% if search %}Try a different search term{% else %}No professions have been approved yet{% endif %}</p>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    function deleteProfession(professionId) {
+        if (confirm('Are you sure you want to delete this profession?')) {
+            window.location.href = '/admin/delete-profession/' + professionId;
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,92 @@
+/* Additional Custom Styles */
+.hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 4rem 0;
+    text-align: center;
+}
+
+.feature-card {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+}
+
+.stat-badge {
+    background: var(--primary);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.loading-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid var(--primary);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 2s linear infinite;
+    margin: 2rem auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Animation classes */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.slide-in {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+}
+
+/* Responsive improvements */
+@media (max-width: 576px) {
+    .hero-section {
+        padding: 2rem 0;
+    }
+    
+    .feature-card {
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .stat-badge {
+        font-size: 0.7rem;
+        padding: 0.4rem 0.8rem;
+    }
+}
+
+/* Print styles */
+@media print {
+    .navbar, .btn {
+        display: none !important;
+    }
+    
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+    }
+}

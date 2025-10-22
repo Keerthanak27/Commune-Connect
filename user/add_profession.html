@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Add Profession - Apartment Hub{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <h2 style="color: var(--primary); margin-bottom: 2rem;">
+        <i class="fas fa-briefcase"></i> Add Your Profession
+    </h2>
+
+    <form method="POST" action="{{ url_for('add_profession') }}">
+        <div class="form-group">
+            <label class="form-label" for="role">Profession/Role</label>
+            <select class="form-control" id="role" name="role" required>
+                <option value="">Select your profession</option>
+                <option value="Doctor">Doctor</option>
+                <option value="Engineer">Engineer</option>
+                <option value="Teacher">Teacher</option>
+                <option value="Plumber">Plumber</option>
+                <option value="Electrician">Electrician</option>
+                <option value="Carpenter">Carpenter</option>
+                <option value="Chef">Chef</option>
+                <option value="Driver">Driver</option>
+                <option value="Security Guard">Security Guard</option>
+                <option value="Housekeeper">Housekeeper</option>
+                <option value="Yoga Instructor">Yoga Instructor</option>
+                <option value="Fitness Trainer">Fitness Trainer</option>
+                <option value="Tutor">Tutor</option>
+                <option value="Graphic Designer">Graphic Designer</option>
+                <option value="Web Developer">Web Developer</option>
+                <option value="Accountant">Accountant</option>
+                <option value="Lawyer">Lawyer</option>
+                <option value="other">Other (Please specify)</option>
+            </select>
+        </div>
+
+        <div class="form-group" id="otherRoleGroup" style="display: none;">
+            <label class="form-label" for="other_role">Specify Your Profession</label>
+            <input type="text" class="form-control" id="other_role" name="other_role" 
+                   placeholder="Enter your profession">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="description">Description (Optional)</label>
+            <textarea class="form-control" id="description" name="description" 
+                      rows="4" placeholder="Describe your services, experience, or specialization..."></textarea>
+        </div>
+
+        <div style="background: #e7f3ff; padding: 1rem; border-radius: var(--radius); margin-bottom: 1.5rem;">
+            <h4 style="color: var(--info); margin-bottom: 0.5rem;">
+                <i class="fas fa-info-circle"></i> Note
+            </h4>
+            <p style="margin-bottom: 0; font-size: 0.9rem;">
+                Your profession will be reviewed by the admin before it appears publicly. 
+                Your contact information will be automatically shared from your profile.
+            </p>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">
+            <i class="fas fa-plus-circle"></i> Add Profession
+        </button>
+        
+        <a href="{{ url_for('user_dashboard') }}" class="btn btn-secondary" style="width: 100%; margin-top: 1rem;">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </form>
+</div>
+
+<script>
+    document.getElementById('role').addEventListener('change', function() {
+        const otherGroup = document.getElementById('otherRoleGroup');
+        if (this.value === 'other') {
+            otherGroup.style.display = 'block';
+            document.getElementById('other_role').required = true;
+        } else {
+            otherGroup.style.display = 'none';
+            document.getElementById('other_role').required = false;
+        }
+    });
+
+    // Auto-fill other role if needed
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const roleSelect = document.getElementById('role');
+        const otherInput = document.getElementById('other_role');
+        
+        if (roleSelect.value === 'other' && otherInput.value) {
+            // Create a hidden input to send the custom role
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'role';
+            hiddenInput.value = otherInput.value;
+            this.appendChild(hiddenInput);
+            
+            // Disable the original select
+            roleSelect.disabled = true;
+        }
+    });
+</script>
+{% endblock %}

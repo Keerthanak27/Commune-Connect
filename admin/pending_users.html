@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Pending Users - Apartment Hub{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 2rem;">
+        <h2 style="color: var(--primary);">
+            <i class="fas fa-user-clock"></i> Pending User Approvals
+        </h2>
+        <a href="{{ url_for('admin_users') }}" class="btn btn-primary">
+            <i class="fas fa-users"></i> Approved Users
+        </a>
+    </div>
+
+    {% if users %}
+    <div class="grid grid-2">
+        {% for user in users %}
+        <div class="card" style="padding: 1.5rem;">
+            <div style="text-align: center; margin-bottom: 1rem;">
+                {% if user.profile_photo %}
+                    <img src="{{ url_for('static', filename='uploads/' + user.profile_photo) }}" 
+                         class="profile-img" alt="Profile">
+                {% else %}
+                    <div style="width: 80px; height: 80px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin: 0 auto;">
+                        <i class="fas fa-user" style="font-size: 2rem;"></i>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <h3 style="text-align: center; color: var(--primary); margin-bottom: 0.5rem;">
+                {{ user.username }}
+            </h3>
+            
+            <div style="background: #f8f9fa; padding: 1rem; border-radius: var(--radius); margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: between; margin-bottom: 0.5rem;">
+                    <span>Email:</span>
+                    <strong>{{ user.email }}</strong>
+                </div>
+                <div style="display: flex; justify-content: between; margin-bottom: 0.5rem;">
+                    <span>Contact:</span>
+                    <strong>{{ user.contact_number }}</strong>
+                </div>
+                <div style="display: flex; justify-content: between; margin-bottom: 0.5rem;">
+                    <span>House No:</span>
+                    <strong>{{ user.house_no }}</strong>
+                </div>
+                <div style="display: flex; justify-content: between;">
+                    <span>Registered:</span>
+                    <strong>{{ user.created_at[:10] }}</strong>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 0.5rem;">
+                <a href="{{ url_for('approve_user', user_id=user.id) }}" 
+                   class="btn btn-success btn-sm" style="flex: 1;"
+                   onclick="return confirm('Approve this user?')">
+                    <i class="fas fa-check"></i> Approve
+                </a>
+                <a href="{{ url_for('reject_user', user_id=user.id) }}" 
+                   class="btn btn-danger btn-sm" style="flex: 1;"
+                   onclick="return confirm('Reject and delete this user?')">
+                    <i class="fas fa-times"></i> Reject
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 3rem; color: var(--gray);">
+        <i class="fas fa-check-circle" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+        <h3>No Pending Users</h3>
+        <p>All user registrations have been processed</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
